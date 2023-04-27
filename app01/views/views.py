@@ -1,13 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, HttpResponse
-from app01.utils.R import result,error
+from app01.utils.R import result, error
 from app01.models import BreastCancer
 from app01.utils.cancerPredict import cancerPredict
 import json
 
 
 def predict(request):
-    if request.method == "GET":
+    if request.method != "POST":
         res = error(code=1, msg="访问方法错误")
         return JsonResponse(res)
 
@@ -34,7 +34,8 @@ def predict(request):
     """
     # 封装数据
     data_list = []
-    key_list = ["clump_thickness", "uniformity_of_cell_size", "uniformity_of_cell_shape", "marginal_adhesion", "single_epithelial_cell_size",
+    key_list = ["clump_thickness", "uniformity_of_cell_size", "uniformity_of_cell_shape", "marginal_adhesion",
+                "single_epithelial_cell_size",
                 "bare_nuclei", "bland_chromatin", "normal_nucleoli", "mitoses"]
     for key in key_list:
         data_list.append(data['data'][key])
@@ -49,12 +50,3 @@ def predict(request):
     res = result(code=0, msg="success", data=isCancer)
     return JsonResponse(res)
 
-
-def login(request):
-    # todo:登录逻辑
-    return None
-
-
-def register(request):
-    # todo:注册逻辑
-    return None
