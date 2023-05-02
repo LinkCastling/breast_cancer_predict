@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.shortcuts import render, HttpResponse
 from app01.utils.R import result, error
 from app01.models import BreastCancer
 from app01.utils.cancerPredict import cancerPredict
@@ -15,6 +14,7 @@ def predict(request):
     # todo:获取请求数据
     data_json = request.POST.get("data")
     data = json.loads(data_json)
+    # info = json.loads(request.body.decode('utf-8')) 可以直接发送json
     """
     0.444444	0.000000	0.000000	0.000000	0.111111	0.000000	0.222222	0.000000	0.000000
     {
@@ -49,4 +49,3 @@ def predict(request):
                                 normal_nucleoli=data_list[7], mitoses=data_list[8], result=isCancer)
     res = result(code=0, msg="success", data=isCancer)
     return JsonResponse(res)
-

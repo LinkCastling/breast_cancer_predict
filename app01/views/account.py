@@ -1,8 +1,8 @@
-import hashlib
 import json
 from django.http import JsonResponse
 from app01.utils.R import error, result
 from app01.models import UserInfo
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 
 def login(request):
@@ -12,7 +12,6 @@ def login(request):
     # post请求才处理
     data_json = request.POST.get("data")
     data = json.loads(data_json)
-    print(data)
     username = data['data']["username"]
     password = data['data']["password"]  # 已经加密了
 
@@ -26,8 +25,11 @@ def login(request):
             # 比较密码是否相同
             if user_object.password == password:
                 #  写入session
-                request.session["info"] = {"id": user_object.id, "username": user_object.username}
-                res = result(code=0, msg="登录成功！", data={})
+                # request.session["info"] = {"id": user_object.id, "username": user_object.username}
+                payload = jwt_payload_handler(user_object)
+                token = jwt_encode_handler(payload)
+                json_token = {"token": token}
+                res = result(code=0, msg="登录成功！", data=json_token)
                 return JsonResponse(res)
             else:
                 # 密码错误
