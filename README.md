@@ -1,0 +1,2 @@
+# breast_cancer_predict
+一个基于Django的乳腺癌预测网站的后端
